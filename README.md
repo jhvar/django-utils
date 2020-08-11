@@ -15,56 +15,56 @@ jhvar-django-utils是一个django框架下的辅助项目，基于django2.2.5开
 ### demo
 
 setting.py
->
->……
->MIDDLEWARE = [
->    'django.middleware.security.SecurityMiddleware',
->    'django.contrib.sessions.middleware.SessionMiddleware',
->    'jhvar.django.urls.middleware.JvRoleMiddleware',  # 保证拦截器在会话创建之后调用
->    'corsheaders.middleware.CorsMiddleware',
->    'django.middleware.common.CommonMiddleware',
->    'django.middleware.csrf.CsrfViewMiddleware',
->    'django.contrib.auth.middleware.AuthenticationMiddleware',
->    'django.contrib.messages.middleware.MessageMiddleware',
->    'django.middleware.clickjacking.XFrameOptionsMiddleware',
->]
->……
->
+>  
+>……  
+>MIDDLEWARE = [  
+>    'django.middleware.security.SecurityMiddleware',  
+>    'django.contrib.sessions.middleware.SessionMiddleware',  
+>    'jhvar.django.urls.middleware.JvRoleMiddleware',  # 保证拦截器在会话创建之后调用  
+>    'corsheaders.middleware.CorsMiddleware',  
+>    'django.middleware.common.CommonMiddleware',  
+>    'django.middleware.csrf.CsrfViewMiddleware',  
+>    'django.contrib.auth.middleware.AuthenticationMiddleware',  
+>    'django.contrib.messages.middleware.MessageMiddleware',  
+>    'django.middleware.clickjacking.XFrameOptionsMiddleware',  
+>]  
+>……  
+>  
 
 urls.py
->
->……
->from django.urls import include, path
->from jhvar.django.urls import jv_path
->
->app_name = 'appname'
->permitted_roles = ['admin']  #可以在这里定义整个app的权限
->
->urlpatterns = [
->    jv_path('admin', views.my_admin, name='my_admin', roles=['admin']),  #可以在这里单独定义权限，优先级小于app的权限
->    path('', views.index),
->]
->
+>  
+>……  
+>from django.urls import include, path  
+>from jhvar.django.urls import jv_path  
+>  
+>app_name = 'appname'  
+>permitted_roles = ['admin']  #可以在这里定义整个app的权限  
+>  
+>urlpatterns = [  
+>    jv_path('admin', views.my_admin, name='my_admin', roles=['admin']),  #可以在这里单独定义权限，优先级小于app的权限  
+>    path('', views.index),  
+>]  
+>  
 
 views.py
->
->……
->def login(request):
->    #登录校验逻辑
->    grant_roles(request, ['admin', 'super']) 
->    #完成登录
->……
->
+>from jhvar.django.urls import grant_roles  
+>……  
+>def login(request):  
+>    #登录校验逻辑  
+>    grant_roles(request, ['admin', 'super'])   
+>    #完成登录  
+>……  
+>  
 
 
 ### 安装使用
 
->(venv)> pip install jhvar-django-utils
-
-或者在 requirements.txt中定义
->……
->jhvar-django-utils>=0.1.6
->……
+>(venv)> pip install jhvar-django-utils  
+  
+或者在 requirements.txt中定义  
+>……  
+>jhvar-django-utils>=0.1.6  
+>……  
 
 ###### 强烈建议您使用最新版本
 
