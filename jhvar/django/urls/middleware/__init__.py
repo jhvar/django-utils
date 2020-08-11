@@ -3,7 +3,7 @@ from django.urls import get_resolver, get_urlconf, NoReverseMatch, get_ns_resolv
 from django.http.response import HttpResponseNotAllowed
 import logging
 from jhvar.django.urls import JvURLPattern
-
+from .. import role_session_key, role_app_key, role_url_key
 
 class JvRoleMiddleware(MiddlewareMixin):
 
@@ -41,27 +41,27 @@ class JvRoleMiddleware(MiddlewareMixin):
         view = "/".join(path)
         roles = None
         if isinstance(resolver, URLResolver):
-            if hasattr(resolver.urlconf_module, 'permitted_roles'):
+            if hasattr(resolver.urlconf_module, role_app_key):
                 if isinstance(resolver.urlconf_module.permitted_roles, (str, tuple, list)):
                     roles = resolver.urlconf_module.permitted_roles
             if not roles:
                 for pattern in resolver.url_patterns:
                     if isinstance(pattern, URLPattern) and pattern.resolve(view):
-                        if isinstance(pattern, JvURLPattern) and hasattr(pattern, 'roles'):
+                        if isinstance(pattern, JvURLPattern) and hasattr(pattern, role_url_key):
                             if isinstance(pattern.roles, (str, tuple, list)):
                                 roles = pattern.roles
         if roles:
             if isinstance(roles, str):
                 roles = [roles]
             self._debug("Url-setting requires access roles: %s" % ",".join(roles))
-            if hasattr(request.session, 'roles'):
-                s_roles = request.session.roles
+            if request.session.exists(role_session_key):
+                s_roles = request.session[role_session_key]
             else:
-                self._debug("There are no roles in session.roles, access denied.")
+                self._debug("There are no %s in session, access denied." % role_session_key)
                 return HttpResponseNotAllowed(permitted_methods=[])
 
             t = set(roles).intersection(set(s_roles))
             if len(t) == 0:
-                self._debug("Session roles are '%s', do not match url-setting, access denied." % ",".join(s_roles))
+                self._debug("Session roles are '%s', mismatch url-setting, access denied." % ",".join(s_roles))
                 return HttpResponseNotAllowed(permitted_methods=[])
 
