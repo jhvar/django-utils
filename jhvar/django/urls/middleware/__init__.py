@@ -54,9 +54,8 @@ class JvRoleMiddleware(MiddlewareMixin):
             if isinstance(roles, str):
                 roles = [roles]
             self._debug("Url-setting requires access roles: %s" % ",".join(roles))
-            if request.session.exists(role_session_key):
-                s_roles = request.session[role_session_key]
-            else:
+            s_roles = request.session.get(role_session_key, None)
+            if not s_roles:
                 self._debug("There are no %s in session, access denied." % role_session_key)
                 return HttpResponseNotAllowed(permitted_methods=[])
 

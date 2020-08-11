@@ -23,8 +23,8 @@ def grant_roles(request, roles):
     if not isinstance(roles, list):
         raise Exception('roles must be string, tuple or list')
     if request and hasattr(request, 'session'):
-        if request.session.exists(role_session_key):
-            s_roles = request.session[role_session_key]
+        s_roles = request.session.get(role_session_key, None)
+        if s_roles:
             s_roles = list(set(s_roles).union(set(roles)))
             request.session[role_session_key] = s_roles
         else:
