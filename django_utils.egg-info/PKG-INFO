@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: django-utils
+Version: 0.1.0
+Summary: A toolkit for django-2.2.5 or higher
+Home-page: https://github.com/jhvar/django-utils
+Author: jhvar
+Author-email: jhvar@outlook.com
+License: MIT Licence
+Description: dynamic router controller with permited roles
+Keywords: pip,django,role,util
+Platform: any
