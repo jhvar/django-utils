@@ -1,4 +1,5 @@
 __pycache__
+jhvar_django_utils.egg-info
 django_utils.egg-info
-dict
+dist
 build
