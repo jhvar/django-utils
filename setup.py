@@ -16,7 +16,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name = "jhvar-django-utils",
-    version = "0.1.4",
+    version = "0.1.5",
     keywords = ("pip", "django", "role", "util"),
     description = "A toolkit for django-2.2.5 or higher",
     long_description = long_description,
