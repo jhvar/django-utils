@@ -1,2 +1,0 @@
-python_version>=3.6.9
-django>=2.2.5
