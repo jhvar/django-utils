@@ -11,12 +11,12 @@
 
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
 
 setup(
     name = "jhvar-django-utils",
-    version = "0.1.6",
+    version = "0.1.9",
     keywords = ("pip", "django", "role", "util"),
     description = "A toolkit for django-2.2.5 or higher",
     long_description = long_description,

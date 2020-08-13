@@ -26,3 +26,11 @@ def full_url(request, name, kwargs=None):
     u = reverse(name, kwargs=kwargs) if kwargs else reverse(name)
     u = request.build_absolute_uri(u)
     return u
+
+
+def safeattr(owner, attr):
+    if isinstance(owner, object) and hasattr(owner, attr):
+        return getattr(owner, attr)
+    if isinstance(owner, (list, set, tuple, dict)) and attr in owner:
+        return owner[attr]
+    return False
