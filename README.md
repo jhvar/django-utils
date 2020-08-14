@@ -59,12 +59,8 @@ views.py
 
 ### 安装使用
 
->(venv)> pip install jhvar-django-utils  
-  
-或者在 requirements.txt中定义  
->……  
->jhvar-django-utils>=0.1.6  
->……  
+>(venv)> pip install django-role-router
+
 
 ###### 强烈建议您使用最新版本
 
