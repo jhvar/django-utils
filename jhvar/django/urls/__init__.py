@@ -1,5 +1,6 @@
 from functools import partial
 from django.urls.resolvers import RoutePattern, RegexPattern, URLPattern, URLResolver
+from django.utils.functional import cached_property
 import logging
 
 role_session_key = 'roles'
@@ -11,8 +12,11 @@ class JvURLPattern(URLPattern):
         super().__init__(pattern, callback, default_args=default_args, name=name)
         self.roles = roles
 
-    def __repr__(self):
-        return '<%s %s Roles:%s>' % (self.__class__.__name__, self.pattern.describe(), ",".join(self.roles) if self.roles else 'no-def')
+
+class JvURLResolver(URLResolver):
+    def __init__(self, pattern, urlconf_name, default_kwargs=None, app_name=None, namespace=None, roles=None):
+        super().__init__(pattern, urlconf_name, default_kwargs, app_name, namespace)
+        self.roles = roles
 
 
 def grant_roles(request, roles):
@@ -30,7 +34,7 @@ def grant_roles(request, roles):
         else:
             request.session[role_session_key] = roles
         logger = logging.getLogger("jhvar.django.logger")
-        logger.debug("Current session roles are %s" % ",".join(request.session[role_session_key]))
+        logger.debug("Current session roles are %s" % ",".join(request.session.get(role_session_key, [])))
 
 
 def _jhvar_path(route, view, kwargs=None, name=None, Pattern=None, roles=None):
@@ -38,12 +42,13 @@ def _jhvar_path(route, view, kwargs=None, name=None, Pattern=None, roles=None):
         # For include(...) processing.
         pattern = Pattern(route, is_endpoint=False)
         urlconf_module, app_name, namespace = view
-        return URLResolver(
+        return JvURLResolver(
             pattern,
             urlconf_module,
             kwargs,
             app_name=app_name,
             namespace=namespace,
+            roles=roles
         )
     elif callable(view):
         pattern = Pattern(route, name=name, is_endpoint=True)

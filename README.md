@@ -30,6 +30,17 @@ setting.py
 >]  
 >……  
 >  
+>LOGGING = {  
+>    ……  
+>    'loggers': {  
+>        ……  
+>        'jhvar.django.logger': {  # 增加拦截日志调试信息输出  
+>            'handlers': ['console'],  
+>            'level': DEBUG,  
+>        },  
+>    }  
+>  
+>
 
 urls.py
 >  
@@ -37,11 +48,15 @@ urls.py
 >from django.urls import include, path  
 >from jhvar.django.urls import jv_path  
 >  
+>router = routers.DefaultRouter()  
+>router.register('feature', Feature, basename="feature")  
+>  
 >app_name = 'appname'  
 >permitted_roles = ['admin']  #可以在这里定义整个app的权限  
 >  
 >urlpatterns = [  
->    jv_path('admin', views.my_admin, name='my_admin', roles=['admin']),  #可以在这里单独定义权限，优先级小于app的权限  
+>    jv_path('admin', views.my_admin, name='my_admin', roles=['admin']),  #可以在这里单独定义权限，优先级高于app的权限  
+>    jv_re_path(r'^api/', include(router.urls), roles='api-user'),  #可以为rest_framework限制角色  
 >    path('', views.index),  
 >]  
 >  
@@ -51,7 +66,7 @@ views.py
 >……  
 >def login(request):  
 >    #登录校验逻辑  
->    grant_roles(request, ['admin', 'super'])   
+>    grant_roles(request, ['admin', 'super'])  # 一句话授权
 >    #完成登录  
 >……  
 >  
